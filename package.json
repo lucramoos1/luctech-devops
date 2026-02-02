@@ -1,0 +1,31 @@
+{
+  "name": "techflow-landing",
+  "version": "1.0.0",
+  "description": "Landing Page profissional para empresa de Tecnologia da Informação",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "build": "echo 'No build step required for static site'",
+    "test": "echo 'Add test command here'"
+  },
+  "keywords": [
+    "landing-page",
+    "web-design",
+    "ti",
+    "tecnologia",
+    "responsive",
+    "html5",
+    "css3",
+    "javascript"
+  ],
+  "author": "TechFlow Dev Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/seu-usuario/techflow.git"
+  },
+  "bugs": {
+    "url": "https://github.com/seu-usuario/techflow/issues"
+  },
+  "homepage": "https://github.com/seu-usuario/techflow#readme"
+}

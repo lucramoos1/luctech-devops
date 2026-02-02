@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechFlow | Soluções de TI Profissionais</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #1e40af;
+            --secondary: #8b5cf6;
+            --dark-bg: #0f172a;
+            --dark-card: #1e293b;
+            --dark-border: #334155;
+            --light-bg: #f8fafc;
+            --light-card: #ffffff;
+            --light-text: #1e293b;
+            --light-border: #e2e8f0;
+            --text-light: #64748b;
+            --success: #10b981;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--dark-bg);
+            color: #e2e8f0;
+            line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        body.light-mode {
+            background-color: var(--light-bg);
+            color: var(--light-text);
+        }
+
+        /* Efeito de gradiente no fundo */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.1), transparent 40%),
+                        radial-gradient(circle at 80% 90%, rgba(139, 92, 246, 0.1), transparent 40%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        body.light-mode::before {
+            background: radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.05), transparent 40%),
+                        radial-gradient(circle at 80% 90%, rgba(139, 92, 246, 0.05), transparent 40%);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--dark-card);
+        }
+
+        body.light-mode::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary);
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background-color: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(51, 65, 85, 0.3);
+            padding: 1rem 2rem;
+            transition: all 0.3s ease;
+        }
+
+        body.light-mode header {
+            background-color: rgba(248, 250, 252, 0.9);
+            border-bottom-color: var(--light-border);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body.light-mode .logo {
+            color: var(--light-text);
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
+
+        nav {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #cbd5e1;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        body.light-mode nav a {
+            color: var(--text-light);
+        }
+
+        nav a:hover,
+        nav a.active {
+            color: var(--primary);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::after,
+        nav a.active::after {
+            width: 100%;
+        }
+
+        /* Botões de tema e menu */
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        button {
+            border: none;
+            background: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle {
+            background-color: var(--dark-card);
+            border: 1px solid var(--dark-border);
+            padding: 0.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fbbf24;
+            font-size: 1.2rem;
+        }
+
+        body.light-mode .theme-toggle {
+            background-color: var(--light-card);
+            border-color: var(--light-border);
+            color: #3b82f6;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            flex-direction: column;
+            gap: 0.4rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .mobile-menu-btn span {
+            width: 25px;
+            height: 2px;
+            background-color: #e2e8f0;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        body.light-mode .mobile-menu-btn span {
+            background-color: var(--light-text);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Seção */
+        section {
+            padding: 5rem 2rem;
+            scroll-margin-top: 80px;
+        }
+
+        /* Animações */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .slide-in-left {
+            animation: slideInLeft 0.6s ease-out;
+        }
+
+        /* Hero Section */
+        #hero {
+            min-height: calc(100vh - 80px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 80px;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+        }
+
+        .hero-content h1 {
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            font-family: 'Poppins', sans-serif;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: #fff;
+            line-height: 1.2;
+        }
+
+        body.light-mode .hero-content h1 {
+            color: var(--light-text);
+        }
+
+        .hero-content p {
+            font-size: 1.25rem;
+            color: #94a3b8;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        body.light-mode .hero-content p {
+            color: var(--text-light);
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 0.875rem 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(59, 130, 246, 0.4);
+        }
+
+        .cta-button.secondary {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            padding: 0.7rem 1.8rem;
+        }
+
+        .cta-button.secondary:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Seção de Serviços */
+        #services h2,
+        #about h2,
+        #faq h2,
+        #contact h2 {
+            font-size: 2.5rem;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+        }
+
+        body.light-mode .section-subtitle {
+            color: var(--text-light);
+        }
+
+        .section-divider {
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            margin: 0 auto 2rem;
+            border-radius: 2px;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .service-card {
+            background-color: var(--dark-card);
+            border: 1px solid var(--dark-border);
+            padding: 2rem;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        body.light-mode .service-card {
+            background-color: var(--light-card);
+            border-color: var(--light-border);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .service-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.15);
+        }
+
+        .service-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .service-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        body.light-mode .service-card h3 {
+            color: var(--light-text);
+        }
+
+        .service-card p {
+            color: #cbd5e1;
+            line-height: 1.7;
+        }
+
+        body.light-mode .service-card p {
+            color: var(--text-light);
+        }
+
+        /* Seção Sobre */
+        #about {
+            background-color: rgba(30, 41, 59, 0.5);
+        }
+
+        body.light-mode #about {
+            background-color: #f8fafc;
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+            margin-top: 2rem;
+        }
+
+        .about-text h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .about-text p {
+            color: #cbd5e1;
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        body.light-mode .about-text p {
+            color: var(--text-light);
+        }
+
+        .about-features {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .feature-item {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .feature-icon {
+            color: var(--success);
+            font-weight: 700;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .feature-text h4 {
+            margin-bottom: 0.25rem;
+            color: #fff;
+        }
+
+        body.light-mode .feature-text h4 {
+            color: var(--light-text);
+        }
+
+        .feature-text p {
+            font-size: 0.9rem;
+            color: #94a3b8;
+        }
+
+        body.light-mode .feature-text p {
+            color: var(--text-light);
+        }
+
+        .about-image {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 12px;
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 350px;
+            color: white;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* FAQ Section */
+        #faq {
+            background-color: rgba(30, 41, 59, 0.5);
+        }
+
+        body.light-mode #faq {
+            background-color: #f8fafc;
+        }
+
+        .faq-container {
+            max-width: 700px;
+            margin: 0 auto;
+            margin-top: 3rem;
+        }
+
+        .faq-item {
+            background-color: var(--dark-card);
+            border: 1px solid var(--dark-border);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        body.light-mode .faq-item {
+            background-color: var(--light-card);
+            border-color: var(--light-border);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .faq-item.active {
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+        }
+
+        .faq-question {
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: #fff;
+            user-select: none;
+        }
+
+        body.light-mode .faq-question {
+            color: var(--light-text);
+        }
+
+        .faq-question:hover {
+            background-color: rgba(59, 130, 246, 0.05);
+        }
+
+        .faq-icon {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+            color: var(--primary);
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            padding: 0 1.5rem;
+            color: #cbd5e1;
+            background-color: rgba(59, 130, 246, 0.02);
+        }
+
+        body.light-mode .faq-answer {
+            color: var(--text-light);
+            background-color: rgba(59, 130, 246, 0.01);
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 500px;
+            padding: 1.5rem;
+        }
+
+        /* Formulário de Contato */
+        #contact {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+        }
+
+        .contact-form {
+            max-width: 600px;
+            margin: 3rem auto 0;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #e2e8f0;
+            font-weight: 500;
+        }
+
+        body.light-mode .form-group label {
+            color: var(--light-text);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            background-color: var(--dark-card);
+            border: 1px solid var(--dark-border);
+            border-radius: 8px;
+            color: #e2e8f0;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        body.light-mode .form-group input,
+        body.light-mode .form-group textarea {
+            background-color: var(--light-card);
+            border-color: var(--light-border);
+            color: var(--light-text);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background-color: rgba(59, 130, 246, 0.05);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-group input.error,
+        .form-group textarea.error {
+            border-color: #ef4444;
+        }
+
+        .error-message {
+            color: #ef4444;
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .form-group input.error ~ .error-message {
+            display: block;
+        }
+
+        .form-group textarea.error ~ .error-message {
+            display: block;
+        }
+
+        .form-submit {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .form-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+        }
+
+        .form-submit:active {
+            transform: translateY(0);
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: var(--dark-card);
+            color: white;
+            padding: 1.5rem 2rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--success);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: slideInUp 0.3s ease;
+            display: none;
+            z-index: 1000;
+            max-width: 400px;
+        }
+
+        body.light-mode .toast {
+            background-color: var(--light-card);
+            color: var(--light-text);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        @keyframes slideInUp {
+            from {
+                transform: translateY(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .toast.show {
+            display: block;
+        }
+
+        .toast.success {
+            border-left-color: var(--success);
+        }
+
+        .toast.error {
+            border-left-color: #ef4444;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark-card);
+            border-top: 1px solid var(--dark-border);
+            padding: 3rem 2rem 1.5rem;
+            margin-top: 4rem;
+        }
+
+        body.light-mode footer {
+            background-color: #f1f5f9;
+            border-top-color: var(--light-border);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            color: #fff;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        body.light-mode .footer-section h3 {
+            color: var(--light-text);
+        }
+
+        .footer-section p,
+        .footer-section a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            transition: color 0.3s ease;
+        }
+
+        body.light-mode .footer-section p,
+        body.light-mode .footer-section a {
+            color: var(--text-light);
+        }
+
+        .footer-section a:hover {
+            color: var(--primary);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-link {
+            display: inline-flex;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(59, 130, 246, 0.1);
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background-color: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--dark-border);
+            padding-top: 2rem;
+            text-align: center;
+            color: #64748b;
+        }
+
+        body.light-mode .footer-bottom {
+            border-top-color: var(--light-border);
+            color: var(--text-light);
+        }
+
+        /* WhatsApp Button */
+        .whatsapp-button {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.8rem;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
+            transition: all 0.3s ease;
+            z-index: 99;
+        }
+
+        .whatsapp-button:hover {
+            transform: scale(1.1) translateY(-5px);
+            box-shadow: 0 8px 20px rgba(37, 211, 102, 0.5);
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            nav {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: flex;
+            }
+
+            section {
+                padding: 3rem 1rem;
+            }
+
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+
+            .hero-content p {
+                font-size: 1rem;
+            }
+
+            #services h2,
+            #about h2,
+            #faq h2,
+            #contact h2 {
+                font-size: 1.75rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .whatsapp-button {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 1rem;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+
+            .hero-content h1 {
+                font-size: 1.5rem;
+            }
+
+            #services h2,
+            #about h2,
+            #faq h2,
+            #contact h2 {
+                font-size: 1.5rem;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header e Navegação -->
+    <header>
+        <div class="header-container">
+            <a href="#hero" class="logo">Tech<span>Flow</span></a>
+            
+            <nav>
+                <a href="#services" class="nav-link">Serviços</a>
+                <a href="#about" class="nav-link">Sobre</a>
+                <a href="#faq" class="nav-link">FAQ</a>
+                <a href="#contact" class="nav-link">Contato</a>
+            </nav>
+
+            <div class="header-actions">
+                <button class="theme-toggle" id="themeToggle" title="Alternar tema">🌙</button>
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Menu Mobile (oculto) -->
+    <nav id="mobileMenu" style="display: none; position: fixed; top: 70px; left: 0; right: 0; background-color: var(--dark-card); z-index: 99; border-bottom: 1px solid var(--dark-border);">
+        <a href="#services" class="nav-link" style="display: block; padding: 1rem 2rem; border-bottom: 1px solid var(--dark-border);">Serviços</a>
+        <a href="#about" class="nav-link" style="display: block; padding: 1rem 2rem; border-bottom: 1px solid var(--dark-border);">Sobre</a>
+        <a href="#faq" class="nav-link" style="display: block; padding: 1rem 2rem; border-bottom: 1px solid var(--dark-border);">FAQ</a>
+        <a href="#contact" class="nav-link" style="display: block; padding: 1rem 2rem;">Contato</a>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero-content">
+        <div class="container">
+            <h1 class="fade-in-up">Soluções de TI que Transformam Negócios</h1>
+            <p class="fade-in-up" style="animation-delay: 0.1s;">Desenvolvemos tecnologias inovadoras para impulsionar sua empresa no mercado digital</p>
+            <div style="animation: fadeInUp 0.6s ease-out 0.2s both;">
+                <a href="#contact" class="cta-button">Solicite um Orçamento</a>
+                <a href="#services" class="cta-button secondary" style="margin-left: 1rem;">Conheça Nossos Serviços</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção de Serviços -->
+    <section id="services">
+        <div class="container">
+            <h2>Nossos Serviços</h2>
+            <p class="section-subtitle">Soluções completas de TI para empresas de todos os portes</p>
+            <div class="section-divider"></div>
+            
+            <div class="services-grid">
+                <div class="service-card fade-in-up">
+                    <div class="service-icon">💻</div>
+                    <h3>Desenvolvimento Web</h3>
+                    <p>Criamos sites e aplicações web modernas, responsivas e otimizadas para conversão. Utilizamos as tecnologias mais atuais do mercado.</p>
+                </div>
+                
+                <div class="service-card fade-in-up" style="animation-delay: 0.1s;">
+                    <div class="service-icon">📱</div>
+                    <h3>Aplicativos Móveis</h3>
+                    <p>Desenvolvemos aplicativos nativos e híbridos para iOS e Android. Soluções escaláveis e com excelente experiência do usuário.</p>
+                </div>
+                
+                <div class="service-card fade-in-up" style="animation-delay: 0.2s;">
+                    <div class="service-icon">🔒</div>
+                    <h3>Consultoria em Segurança</h3>
+                    <p>Auditoria de segurança, implementação de protocolos de proteção e conformidade com LGPD. Protegemos seus dados e os de seus clientes.</p>
+                </div>
+
+                <div class="service-card fade-in-up" style="animation-delay: 0.3s;">
+                    <div class="service-icon">🛠️</div>
+                    <h3>Suporte Técnico 24/7</h3>
+                    <p>Monitoramento contínuo, manutenção preventiva e suporte técnico especializado. Sua infraestrutura sempre funcionando perfeitamente.</p>
+                </div>
+
+                <div class="service-card fade-in-up" style="animation-delay: 0.4s;">
+                    <div class="service-icon">☁️</div>
+                    <h3>Soluções em Cloud</h3>
+                    <p>Migração para cloud, infraestrutura gerenciada e backup automático. Escalabilidade e redundância para sua paz de espírito.</p>
+                </div>
+
+                <div class="service-card fade-in-up" style="animation-delay: 0.5s;">
+                    <div class="service-icon">📊</div>
+                    <h3>Business Intelligence</h3>
+                    <p>Transformamos dados em insights valiosos. Dashboards inteligentes e relatórios automatizados para melhor tomada de decisão.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção Sobre -->
+    <section id="about">
+        <div class="container">
+            <h2>Sobre a TechFlow</h2>
+            <p class="section-subtitle">Inovação e excelência em tecnologia desde 2015</p>
+            <div class="section-divider"></div>
+
+            <div class="about-content fade-in-up">
+                <div class="about-text">
+                    <h3>Quem Somos</h3>
+                    <p>A TechFlow é uma empresa especializada em soluções de Tecnologia da Informação. Com mais de 8 anos de experiência, ajudamos empresas a transformarem seus processos através da tecnologia.</p>
+                    
+                    <h3 style="margin-top: 2rem;">Nossa Missão</h3>
+                    <p>Fornecer soluções tecnológicas inovadoras que impulsionam o crescimento e eficiência dos negócios de nossos clientes.</p>
+
+                    <div class="about-features">
+                        <div class="feature-item">
+                            <div class="feature-icon">✓</div>
+                            <div class="feature-text">
+                                <h4>100+ Projetos Entregues</h4>
+                                <p>Clientes satisfeitos em diversos segmentos</p>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <div class="feature-icon">✓</div>
+                            <div class="feature-text">
+                                <h4>Equipe de Especialistas</h4>
+                                <p>Profissionais certificados em tecnologias líderes</p>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <div class="feature-icon">✓</div>
+                            <div class="feature-text">
+                                <h4>Atendimento Personalizado</h4>
+                                <p>Soluções adaptadas às suas necessidades</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="about-image" style="animation: fadeInUp 0.6s ease-out 0.1s both;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 4rem; margin-bottom: 1rem;">🚀</div>
+                        <p style="font-size: 1.2rem; font-weight: 600;">Transformando Ideias em Realidade</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção FAQ -->
+    <section id="faq">
+        <div class="container">
+            <h2>Perguntas Frequentes</h2>
+            <p class="section-subtitle">Tire suas dúvidas sobre nossos serviços</p>
+            <div class="section-divider"></div>
+
+            <div class="faq-container">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Qual é o tempo médio de desenvolvimento de um projeto?</span>
+                        <span class="faq-icon">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        O tempo varia de acordo com a complexidade do projeto. Em média, um website leva de 4 a 8 semanas, enquanto aplicações mais complexas podem levar 3 a 6 meses. Realizamos um cronograma detalhado antes de iniciar qualquer trabalho.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Vocês oferecem suporte após a entrega?</span>
+                        <span class="faq-icon">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        Sim! Oferecemos pacotes de suporte que incluem manutenção preventiva, correção de bugs, atualizações e monitoramento 24/7. Você pode escolher o plano que melhor se adequa às suas necessidades.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Como funciona o processo de orçamento?</span>
+                        <span class="faq-icon">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        Começamos com uma reunião de descoberta para entender seus objetivos. Em seguida, nossa equipe analisa os requisitos e prepara uma proposta detalhada com timeline, custos e escopo. Você pode revisar e discutir antes de confirmarmos o início.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Quais tecnologias vocês utilizam?</span>
+                        <span class="faq-icon">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        Utilizamos tecnologias atuais e confiáveis: React, Vue.js e Angular para frontend; Node.js, Python e C# para backend; PostgreSQL e MongoDB para bancos de dados; e AWS, Google Cloud e Azure para infraestrutura. Escolhemos a melhor stack para cada projeto.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Vocês trabalham com empresas pequenas?</span>
+                        <span class="faq-icon">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        Absolutamente! Trabalhamos com empresas de todos os tamanhos, desde startups até grandes corporações. Temos soluções flexíveis e escaláveis para atender diferentes orçamentos e necessidades.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção de Contato -->
+    <section id="contact">
+        <div class="container">
+            <h2>Solicite um Orçamento</h2>
+            <p class="section-subtitle">Entre em contato conosco para discutir seu projeto</p>
+            <div class="section-divider"></div>
+
+            <form class="contact-form" id="contactForm">
+                <div class="form-group">
+                    <label for="name">Nome Completo</label>
+                    <input type="text" id="name" name="name" placeholder="Seu nome" required>
+                    <span class="error-message">Por favor, informe seu nome</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">E-mail</label>
+                    <input type="email" id="email" name="email" placeholder="seu.email@empresa.com" required>
+                    <span class="error-message">Por favor, informe um e-mail válido</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Telefone</label>
+                    <input type="tel" id="phone" name="phone" placeholder="(11) 99999-9999">
+                </div>
+
+                <div class="form-group">
+                    <label for="subject">Assunto</label>
+                    <input type="text" id="subject" name="subject" placeholder="Qual é sua necessidade?" required>
+                    <span class="error-message">Por favor, informe o assunto</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="message">Mensagem</label>
+                    <textarea id="message" name="message" placeholder="Descreva seu projeto e objetivos..." required></textarea>
+                    <span class="error-message">Por favor, informe uma mensagem</span>
+                </div>
+
+                <button type="submit" class="form-submit">Enviar Mensagem</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>TechFlow Soluções</h3>
+                <p>Transformando negócios através da tecnologia e inovação.</p>
+                <div class="social-links">
+                    <a href="https://linkedin.com" target="_blank" class="social-link" title="LinkedIn">in</a>
+                    <a href="https://facebook.com" target="_blank" class="social-link" title="Facebook">f</a>
+                    <a href="https://instagram.com" target="_blank" class="social-link" title="Instagram">📷</a>
+                    <a href="https://github.com" target="_blank" class="social-link" title="GitHub">⚙️</a>
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h3>Navegação</h3>
+                <a href="#services">Serviços</a><br>
+                <a href="#about">Sobre</a><br>
+                <a href="#faq">FAQ</a><br>
+                <a href="#contact">Contato</a>
+            </div>
+
+            <div class="footer-section">
+                <h3>Contato</h3>
+                <a href="mailto:contato@techflow.com">contato@techflow.com</a><br>
+                <a href="tel:+5511987654321">(11) 98765-4321</a><br>
+                São Paulo, SP
+            </div>
+
+            <div class="footer-section">
+                <h3>Horário</h3>
+                <p>Seg - Sex: 9h às 18h<br>
+                Sábado: 9h às 13h<br>
+                Domingo: Fechado</p>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2026 TechFlow Soluções. Todos os direitos reservados. | <a href="#">Política de Privacidade</a></p>
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <!-- WhatsApp Button -->
+    <a href="https://wa.me/5511987654321" class="whatsapp-button" target="_blank" title="Chat com WhatsApp">💬</a>
+
+    <!-- Scripts -->
+    <script>
+        // ===== DARK MODE =====
+        const themeToggle = document.getElementById('themeToggle');
+        const htmlElement = document.documentElement;
+
+        const darkModeEnabled = localStorage.getItem('darkMode') === 'true';
+        if (darkModeEnabled) {
+            document.body.classList.add('light-mode');
+            themeToggle.textContent = '☀️';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('light-mode');
+            const isLight = document.body.classList.contains('light-mode');
+            localStorage.setItem('darkMode', isLight);
+            themeToggle.textContent = isLight ? '☀️' : '🌙';
+        });
+
+        // ===== MENU MOBILE =====
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.style.display = mobileMenu.style.display === 'none' ? 'block' : 'none';
+        });
+
+        document.querySelectorAll('#mobileMenu a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.style.display = 'none';
+            });
+        });
+
+        // ===== SMOOTH SCROLL =====
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // ===== ACTIVE NAV LINK =====
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('nav a');
+
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // ===== FAQ ACCORDION =====
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', function() {
+                const item = this.parentElement;
+                
+                document.querySelectorAll('.faq-item').forEach(i => {
+                    if (i !== item && i.classList.contains('active')) {
+                        i.classList.remove('active');
+                    }
+                });
+                
+                item.classList.toggle('active');
+            });
+        });
+
+        // ===== FORMULÁRIO DE CONTATO =====
+        const contactForm = document.getElementById('contactForm');
+        const toast = document.getElementById('toast');
+
+        function showToast(message, type = 'success') {
+            toast.textContent = message;
+            toast.className = `toast show ${type}`;
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 4000);
+        }
+
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        function validateForm() {
+            let isValid = true;
+            const name = document.getElementById('name');
+            const email = document.getElementById('email');
+            const subject = document.getElementById('subject');
+            const message = document.getElementById('message');
+
+            // Reset
+            document.querySelectorAll('.form-group input, .form-group textarea').forEach(input => {
+                input.classList.remove('error');
+            });
+
+            if (!name.value.trim()) {
+                name.classList.add('error');
+                isValid = false;
+            }
+
+            if (!email.value.trim() || !validateEmail(email.value)) {
+                email.classList.add('error');
+                isValid = false;
+            }
+
+            if (!subject.value.trim()) {
+                subject.classList.add('error');
+                isValid = false;
+            }
+
+            if (!message.value.trim()) {
+                message.classList.add('error');
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            if (!validateForm()) {
+                showToast('Por favor, preencha todos os campos corretamente', 'error');
+                return;
+            }
+
+            // Simular envio
+            const submitBtn = contactForm.querySelector('.form-submit');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Enviando...';
+
+            setTimeout(() => {
+                showToast('Mensagem enviada com sucesso! Entraremos em contato em breve.');
+                contactForm.reset();
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Enviar Mensagem';
+            }, 1500);
+        });
+
+        // ===== ANIMAÇÕES ON SCROLL =====
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    if (entry.target.classList.contains('service-card') || 
+                        entry.target.classList.contains('about-text') ||
+                        entry.target.classList.contains('about-image')) {
+                        entry.target.classList.add('fade-in-up');
+                    }
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.service-card, .about-text, .about-image').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
