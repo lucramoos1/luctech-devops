@@ -1,0 +1,154 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  # Job 1: Validação de HTML e Performance
+  validate:
+    runs-on: ubuntu-latest
+    name: Validate & Test
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Validate HTML
+      uses: Cybozu-Labs/html-validator-action@v1
+      with:
+        files: './index.html'
+    
+    - name: Check file sizes
+      run: |
+        echo "=== File Sizes ==="
+        du -sh ./
+        du -sh ./index.html
+        du -sh ./css/
+        du -sh ./js/
+        echo "=== Lighthouse Check ==="
+        echo "Run lighthouse before deployment to ensure quality"
+
+  # Job 2: Deploy para GitHub Pages
+  deploy:
+    needs: validate
+    runs-on: ubuntu-latest
+    name: Deploy to GitHub Pages
+    
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    
+    - name: Setup Pages
+      uses: actions/configure-pages@v3
+    
+    - name: Upload artifacts
+      uses: actions/upload-pages-artifact@v2
+      with:
+        path: '.'
+    
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v2
+    
+    - name: Show deployment info
+      run: |
+        echo "✅ Deployment successful!"
+        echo "📍 URL: ${{ steps.deployment.outputs.page_url }}"
+        echo "⏰ Deployed at: $(date)"
+
+  # Job 3: Deploy para Vercel (opcional)
+  deploy-vercel:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    name: Deploy to Vercel
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Deploy to Vercel
+      uses: amondnet/vercel-action@v25
+      with:
+        vercel-token: ${{ secrets.VERCEL_TOKEN }}
+        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+        vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+        vercel-args: '--prod'
+        alias-domains: |
+          techflow-main.vercel.app
+
+  # Job 4: Deploy para Netlify (opcional)
+  deploy-netlify:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    name: Deploy to Netlify
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Deploy to Netlify
+      uses: nwtgck/actions-netlify@v2.0
+      with:
+        publish-dir: '.'
+        production-branch: main
+        deploy-message: "Deploy from GitHub Actions"
+        enable-pull-request-comment: true
+        enable-commit-comment: true
+        alias: deploy-preview-${{ github.event.number }}
+      env:
+        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+      timeout-minutes: 1
+
+  # Job 5: Lighthouse Performance Check (comentado, descomente se quiser)
+  # lighthouse:
+  #   runs-on: ubuntu-latest
+  #   name: Lighthouse Check
+  #   
+  #   steps:
+  #   - name: Checkout code
+  #     uses: actions/checkout@v3
+  #   
+  #   - name: Run Lighthouse CI
+  #     uses: treosh/lighthouse-ci-action@v9
+  #     with:
+  #       uploadArtifacts: true
+  #       temporaryPublicStorage: true
+
+  # Job 6: Notificação de Deploy
+  notify:
+    needs: deploy
+    runs-on: ubuntu-latest
+    name: Notify Deployment
+    if: always()
+    
+    steps:
+    - name: Notify success
+      if: success()
+      run: |
+        echo "✅ All checks passed!"
+        echo "🚀 Deployment completed successfully!"
+        echo "📊 Run ID: ${{ github.run_id }}"
+        echo "👤 Triggered by: ${{ github.actor }}"
+        echo "📝 Commit: ${{ github.sha }}"
+    
+    - name: Notify failure
+      if: failure()
+      run: |
+        echo "❌ Deployment failed!"
+        echo "🔍 Check the logs above for details"
+        echo "📊 Run ID: ${{ github.run_id }}"
