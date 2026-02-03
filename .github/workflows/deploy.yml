@@ -3,11 +3,8 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
 
 jobs:
-  # Job 1: Checkout e Deploy para GitHub Pages
   deploy:
     name: Deploy to GitHub Pages
     runs-on: ubuntu-latest
@@ -22,13 +19,15 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Pages
+      - name: Configure Pages with enablement
         uses: actions/configure-pages@v4
+        with:
+          enablement: true
 
-      - name: Upload artifacts
+      - name: Upload artifacts to GitHub Pages
         uses: actions/upload-pages-artifact@v3
         with:
           path: '.'
@@ -38,7 +37,15 @@ jobs:
         uses: actions/deploy-pages@v4
 
       - name: Deployment Summary
+        if: success()
         run: |
-          echo "✅ Deployment successful!"
-          echo "🌐 Your site is live!"
-          echo "⏰ Deployed at: $(date)"
+          echo "✅ Deployment Successful!"
+          echo "🌐 URL: ${{ steps.deployment.outputs.page_url }}"
+          echo "⏰ Deployed: $(date '+%Y-%m-%d %H:%M:%S')"
+
+      - name: Deployment Failed
+        if: failure()
+        run: |
+          echo "❌ Deployment Failed!"
+          echo "⚠️ Please enable GitHub Pages in repository settings"
+          echo "📖 Go to: Settings > Pages > Source > GitHub Actions"
