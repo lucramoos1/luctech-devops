@@ -1,35 +1,63 @@
-name: Deploy to GitHub Pages
+name: Deploy TechFlow
 
 on:
   push:
     branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
 
 jobs:
-  deploy:
-    name: Deploy to GitHub Pages
+  # Job 1: Validação de Qualidade
+  validate:
+    name: Validar Projeto
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
+      - name: Checkout do código
         uses: actions/checkout@v4
 
-      - name: Deploy to GitHub Pages
+      - name: Verificar estrutura de arquivos
+        run: |
+          test -f index.html || (echo "Erro: index.html não encontrado" && exit 1)
+          test -f styles.css || (echo "Erro: styles.css não encontrado" && exit 1)
+          test -f main.js || (echo "Erro: main.js não encontrado" && exit 1)
+
+      - name: Validar HTML5 (W3C Validator)
+        uses: cygnetdigital/html5validator-action@master
+        with:
+          root: ./
+          blacklist: node_modules
+
+  # Job 2: Deploy para GitHub Pages
+  deploy-gh-pages:
+    name: Deploy GitHub Pages
+    needs: validate
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Deploy para GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./
-          cname: # Leave empty unless using custom domain
+          # Mantém o histórico limpo e evita commits duplicados
+          force_orphan: true 
 
-      - name: Deployment Success
-        if: success()
+  # Job 3: Notificação de Status
+  notify:
+    name: Notificar Status
+    needs: [validate, deploy-gh-pages]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Status
         run: |
-          echo "✅ Deployment Successful!"
-          echo "🌐 Your site will be available at:"
-          echo "   https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
-          echo "⏰ Deployed: $(date '+%Y-%m-%d %H:%M:%S')"
-
-      - name: Deployment Failed
-        if: failure()
-        run: |
-          echo "❌ Deployment Failed!"
-          echo "Please check the logs above for details"
+          if [ "${{ needs.deploy-gh-pages.result }}" == "success" ]; then
+            echo "✅ Deployment realizado com sucesso!"
+          else
+            echo "❌ Falha no processo de CI/CD."
+          fi
